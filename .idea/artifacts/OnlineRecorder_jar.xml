@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="OnlineRecorder:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/OnlineRecorder_jar</output-path>
+    <root id="archive" name="OnlineRecorder.jar">
+      <element id="module-output" name="OnlineRecorder" />
+    </root>
+  </artifact>
+</component>
