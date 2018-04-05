@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.GregorianCalendar;
  * A bukkit plugin record online player
  */
 public class OnlineRecorder extends JavaPlugin {
-
+    private BukkitTask task;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -41,8 +42,12 @@ public class OnlineRecorder extends JavaPlugin {
         FileConfiguration cfg = getConfig();
         long interval = cfg.getLong("recording-interval", 60L);
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
-            Date now = new Date( );
+        if (task != null) {
+            task.cancel();
+        }
+
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            Date now = new Date();
             GregorianCalendar gc = new GregorianCalendar();
             gc.setTime(now);
 
@@ -54,9 +59,9 @@ public class OnlineRecorder extends JavaPlugin {
 
             File datafile = new File(getDataFolder().getAbsolutePath() + "/", day + ".yml");
 
-            if(!datafile.exists()) {
+            if (!datafile.exists()) {
                 try {
-                    if(!datafile.createNewFile())
+                    if (!datafile.createNewFile())
                         return;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -71,6 +76,7 @@ public class OnlineRecorder extends JavaPlugin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }, 0L, interval*20L);
+        }, 0L, interval * 20L);
+
     }
 }
